@@ -46,6 +46,7 @@ private:
             cout << token << endl;
         }
     }
+
     static void error(int line, string message) {
         report(line, "", message);
     }
