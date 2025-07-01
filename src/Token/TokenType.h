@@ -1,5 +1,5 @@
-#ifndef TOKENTYPE_HPP
-#define TOKENTYPE_HPP
+#ifndef TOKENTYPE_H
+#define TOKENTYPE_H
 
 enum TokenType {
     // Single-character tokens.
