@@ -14,8 +14,7 @@ public:
     std::any literal;
     int line;
 
-    Token(TokenType type, string lexeme, std::any literal, int line):
-        type(type), lexeme(lexeme), literal(literal), line(line) {}
+    Token(TokenType type, string lexeme, std::any literal, int line);
 
 public:
     string toString();

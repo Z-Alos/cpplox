@@ -1,5 +1,5 @@
 #include "Lox.h"
-// #include "Scanner/Scanner.h"
+#include "../Scanner/Scanner.h"
 #include <iostream>
 #include <vector>
 #include <sstream>
@@ -23,7 +23,7 @@ void Lox::runPrompt(){
     }
 }
 
-void Lox::runFile(string& path){
+void Lox::runFile(const string& path){
     std::ifstream file(path);
 
     if(!file.is_open()){

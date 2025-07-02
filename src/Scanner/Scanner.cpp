@@ -2,6 +2,7 @@
 #include "../Lox/Lox.h"
 #include "../Token/TokenType.h"
 #include "../Token/Token.h"
+#include <cctype>
 #include <vector>
 #include <string>
 #include <any>
@@ -12,7 +13,7 @@ std::vector<Token> Scanner::scanTokens(){
         scanToken();
     }
 
-    tokens.push_back(Token token(EOF, "", "", line));
+    tokens.push_back(Token(TokenType::END_OF_FILE, "", std::any{}, line));
     return tokens;
 }
 
@@ -63,10 +64,29 @@ void Scanner::scanToken(){
 
         default: 
                   if(isDigit(c)) number();
-                  else Lox.error(line, "Unexpected character");
+                  else if(isAlpha(c)) identifier();
+                  else Lox::error(line, "Unexpected character");
                   break;
     }
 
+}
+
+void Scanner::identifier(){
+    while(std::isalnum(peek())){
+        advance();
+    }
+
+    addToken(IDENTIFIER);
+}
+
+bool Scanner::isAlpha(char c){
+    return (c >= 'a' && c <= 'z') || 
+           (c >= 'A' && c <= 'Z') || 
+           (c == '_'); 
+}
+
+bool Scanner::isAlphaNumeric(char c){
+    return isAlpha(c) || isDigit(c);
 }
 
 void Scanner::number(){
@@ -92,7 +112,7 @@ void Scanner::String(){
     }
 
     if(isAtEnd()){
-        Lox.error(line, "Unterminated string.");
+        Lox::error(line, "Unterminated string.");
         return;
     }
 
@@ -136,6 +156,6 @@ void Scanner::addToken(TokenType type){
 
 void Scanner::addToken(TokenType type, std::any literal){
     string text=source.substr(start, current); 
-    tokens.push_back(new Token(type, text, literal, line));
+    tokens.push_back(Token(type, text, literal, line));
 }
 

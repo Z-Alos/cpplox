@@ -3,12 +3,11 @@
 #include <string>
 #include <any>
 
-TokenType type;
-std::string lexeme;
-std::any literal;
-int line;
+Token::Token(TokenType type, string lexeme, std::any literal, int line):
+    type(type), lexeme(lexeme), literal(literal), line(line) {}
 
 std::string Token::toString(){
-    return type + " " + lexeme + " " + literal;
+    // if(literal.type() == type(double)) std::to_string(literal)
+    return type + " " + lexeme + " " + std::to_string(literal);
 }
 

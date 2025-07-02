@@ -22,8 +22,11 @@ public:
 
 private:
     void scanToken();
-    void number();
+    bool isAlpha(char c);
+    bool isAlphaNumeric(char c);
     bool isDigit(char c);
+    void identifier();
+    void number();
     void String();
     bool match(char expected);
     char peek();
