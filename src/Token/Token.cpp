@@ -1,5 +1,6 @@
 #include "Token.h"
 #include "TokenType.h"
+#include <iostream>
 #include <string>
 #include <any>
 
@@ -17,6 +18,7 @@ std::string Token::toString() const {
         if(literal.type() == typeid(std::string)) literalStr = std::any_cast<std::string>(literal);
         if(literal.type() == typeid(double)) literalStr = std::to_string(std::any_cast<double>(literal));
     }
-        return std::to_string(type) + " " + lexeme + " " + literalStr;
+
+    return tokenTypeToString(type) + " " + lexeme + " " + literalStr;
 }
 

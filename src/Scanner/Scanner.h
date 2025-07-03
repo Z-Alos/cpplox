@@ -11,7 +11,7 @@
 
 class Scanner {
 private:
-    int start = 0;
+    std::size_t start = 0;
     std::size_t current = 0;
     int line = 1;
     std::string source;

@@ -2,6 +2,7 @@
 #include "../Lox/Lox.h"
 #include "../Token/TokenType.h"
 #include "../Token/Token.h"
+#include <iostream>
 #include <cctype>
 #include <vector>
 #include <string>
@@ -26,7 +27,7 @@ const std::unordered_map<std::string, TokenType> Scanner::keywords = {
     {"while",  TokenType::WHILE}
 };
 
-Scanner::Scanner(std::string source): source(source), start(0), current(0), line(1) {};
+Scanner::Scanner(std::string source): source(source){};
 
 std::vector<Token> Scanner::scanTokens(){
     while(!isAtEnd()){
@@ -93,7 +94,7 @@ void Scanner::scanToken(){
 }
 
 void Scanner::identifier(){
-    while(std::isalnum(peek())){
+    while(isAlphaNumeric(peek())){
         advance();
     }
 
@@ -124,7 +125,7 @@ void Scanner::number(){
         while(isDigit(peek())) advance();
     }
 
-    addToken(TokenType::NUMBER, std::stod(source.substr(start, current-start-1)));
+    addToken(TokenType::NUMBER, std::stod(source.substr(start, current-start)));
 }
 
 bool Scanner::isDigit(char c){
@@ -153,6 +154,7 @@ void Scanner::String(){
 bool Scanner::match(char expected){
     if(isAtEnd()) return false;
     if(source[current] != expected) return false;
+
 
     current++;
     return true;
