@@ -12,13 +12,17 @@ using std::cerr;
 using std::endl;
 using std::string;
 
+bool Lox::hadError = false;
+
 void Lox::runPrompt(){
+
     while(true){
         string line;
         cout << "> ";
 
         if(!getline(cin, line)) break;
         Lox::run(line);
+
         hadError=false;
     }
 }

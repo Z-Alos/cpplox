@@ -7,6 +7,27 @@
 #include <string>
 #include <any>
 
+const std::unordered_map<std::string, TokenType> Scanner::keywords = {
+    {"and",    TokenType::AND},
+    {"class",  TokenType::CLASS},
+    {"else",   TokenType::ELSE},
+    {"false",  TokenType::FALSE},
+    {"for",    TokenType::FOR},
+    {"fun",    TokenType::FUN},
+    {"if",     TokenType::IF},
+    {"nil",    TokenType::NIL},
+    {"or",     TokenType::OR},
+    {"print",  TokenType::PRINT},
+    {"return", TokenType::RETURN},
+    {"super",  TokenType::SUPER},
+    {"this",   TokenType::THIS},
+    {"true",   TokenType::TRUE},
+    {"var",    TokenType::VAR},
+    {"while",  TokenType::WHILE}
+};
+
+Scanner::Scanner(std::string source): source(source), start(0), current(0), line(1) {};
+
 std::vector<Token> Scanner::scanTokens(){
     while(!isAtEnd()){
         start=current;
@@ -21,35 +42,35 @@ void Scanner::scanToken(){
     char c = advance();
 
     switch (c) {
-        case '(': addToken(LEFT_PAREN); break;
-        case ')': addToken(RIGHT_PAREN); break;
-        case '{': addToken(LEFT_BRACE); break;
-        case '}': addToken(RIGHT_BRACE); break;
-        case ',': addToken(COMMA); break;
-        case '.': addToken(DOT); break;
-        case '-': addToken(MINUS); break;
-        case '+': addToken(PLUS); break;
-        case ';': addToken(SEMICOLON); break;
-        case '*': addToken(STAR); break;
+        case '(': addToken(TokenType::LEFT_PAREN); break;
+        case ')': addToken(TokenType::RIGHT_PAREN); break;
+        case '{': addToken(TokenType::LEFT_BRACE); break;
+        case '}': addToken(TokenType::RIGHT_BRACE); break;
+        case ',': addToken(TokenType::COMMA); break;
+        case '.': addToken(TokenType::DOT); break;
+        case '-': addToken(TokenType::MINUS); break;
+        case '+': addToken(TokenType::PLUS); break;
+        case ';': addToken(TokenType::SEMICOLON); break;
+        case '*': addToken(TokenType::STAR); break;
 
         case '!':
-                  addToken(match('=') ? BANG_EQUAL : BANG);
+                  addToken(match('=') ? TokenType::BANG_EQUAL : TokenType::BANG);
                   break;
         case '=':
-                  addToken(match('=') ? EQUAL_EQUAL : EQUAL);
+                  addToken(match('=') ? TokenType::EQUAL_EQUAL : TokenType::EQUAL);
                   break;
         case '<':
-                  addToken(match('=') ? LESS_EQUAL : LESS);
+                  addToken(match('=') ? TokenType::LESS_EQUAL : TokenType::LESS);
                   break;
         case '>':
-                  addToken(match('=') ? GREATER_EQUAL : GREATER);
+                  addToken(match('=') ? TokenType::GREATER_EQUAL : TokenType::GREATER);
                   break;
         case '/':
                   if(match('/')){ // check if double-slash: comment
                       while(peek() != '\n' && !isAtEnd()) advance();
                   }
                   else{ // divisor
-                      addToken(SLASH);
+                      addToken(TokenType::SLASH);
                   }
                   break;
 
@@ -76,7 +97,12 @@ void Scanner::identifier(){
         advance();
     }
 
-    addToken(IDENTIFIER);
+    std::string text = source.substr(start, current-start);
+
+    auto it = keywords.find(text);
+    TokenType type = (it != keywords.end()) ? it->second : TokenType::IDENTIFIER;
+
+    addToken(type);
 }
 
 bool Scanner::isAlpha(char c){
@@ -98,7 +124,7 @@ void Scanner::number(){
         while(isDigit(peek())) advance();
     }
 
-    addToken(NUMBER, std::stod(source.substr(start, current-start-1)));
+    addToken(TokenType::NUMBER, std::stod(source.substr(start, current-start-1)));
 }
 
 bool Scanner::isDigit(char c){
@@ -119,7 +145,7 @@ void Scanner::String(){
     advance();
 
     std::string value = source.substr(start+1, current-start-1);
-    addToken(STRING, value);
+    addToken(TokenType::STRING, value);
 
     return;
 }
@@ -147,7 +173,7 @@ char Scanner::advance(){
 }
 
 bool Scanner::isAtEnd(){
-    return current>=source.size();
+    return current >= source.size();
 }
 
 void Scanner::addToken(TokenType type){
@@ -155,7 +181,7 @@ void Scanner::addToken(TokenType type){
 }
 
 void Scanner::addToken(TokenType type, std::any literal){
-    string text=source.substr(start, current); 
+    std::string text=source.substr(start, current-start); 
     tokens.push_back(Token(type, text, literal, line));
 }
 

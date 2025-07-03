@@ -3,17 +3,20 @@
 
 #include "../Token/TokenType.h"
 #include "../Token/Token.h"
+#include <cstddef>
 #include <vector>
 #include <string>
 #include <any>
+#include <unordered_map>
 
 class Scanner {
 private:
     int start = 0;
-    int current = 0;
+    std::size_t current = 0;
     int line = 1;
     std::string source;
     std::vector<Token> tokens;
+    static const std::unordered_map<std::string, TokenType> keywords;
 
 public:
     Scanner(std::string source);

@@ -1,9 +1,9 @@
 CXX := g++
 CXXFLAGS := -Wall -Wextra -std=c++20 -g
 
-SRCS := $(wildcard src/*.cpp)
+SRCS := src/main.cpp src/Lox/Lox.cpp src/Scanner/Scanner.cpp src/Token/Token.cpp 
 OBJS := $(SRCS:.cpp=.o)
-BIN := cpplox 
+BIN := cpplox
 
 all: $(BIN)
 
