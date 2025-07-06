@@ -28,6 +28,13 @@ public:
         return items;
     }
 
+    static std::string toLowerCase(std::string str){
+        for(char c: str){
+            c=tolower(c);
+        }
+        return str;
+       }
+
 };
 
 #endif
