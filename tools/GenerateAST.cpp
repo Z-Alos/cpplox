@@ -11,11 +11,12 @@ void defineVisitor(std::ofstream& file, const std::string& baseName, const std::
         file << "class " << typeName << ";\n";
     }
     file << "\n";
+    file << "template <typename R>\n";
     file << "struct Visitor {\n";
     for (const std::string& type : types) {
         std::vector<std::string> parts = utils::split(type, ':');
         std::string typeName = utils::trim(parts[0]);
-        file << "    virtual void visit" << typeName << baseName << "(const " << typeName << "* " << utils::toLowerCase(baseName) << ") = 0;\n";
+        file << "    virtual R visit" << typeName << baseName << "(const " << typeName << "* " << utils::toLowerCase(baseName) << ") = 0;\n";
     }
     file << "};\n\n";
 }
@@ -52,8 +53,9 @@ void defineType(std::ofstream& file, const std::string& baseName, const std::str
         std::string paramName = (name == "operator") ? "operator_" : name;
         file << "    " << type << " " << paramName << ";\n";
     }
-    file << "\n    void accept(Visitor* visitor) const override {\n";
-    file << "        visitor->visit" << className << baseName << "(this);\n";
+    file << "\n    template <typename R>\n";
+    file << "    R accept(Visitor<R>* visitor) const override {\n";
+    file << "        return visitor->visit" << className << baseName << "(this);\n";
     file << "    }\n";
     file << "};\n\n";
 }
@@ -70,7 +72,8 @@ void defineAst(const std::string& outputDir, const std::string& baseName, const 
     file << "class " << baseName << " {\n";
     file << "public:\n";
     file << "    virtual ~" << baseName << "() = default;\n";
-    file << "    virtual void accept(Visitor* visitor) const = 0;\n";
+    file << "    template <typename R>\n";
+    file << "    virtual R accept(Visitor<R>* visitor) const = 0;\n";
     file << "};\n\n";
     for (const std::string& type : types) {
         std::vector<std::string> parts = utils::split(type, ':');

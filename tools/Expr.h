@@ -3,6 +3,7 @@
 #include "../src/Token/Token.h"
 #include <variant>
 #include <string>
+
 using Object = std::variant<std::monostate, double, std::string, bool>;
 
 class Binary;
